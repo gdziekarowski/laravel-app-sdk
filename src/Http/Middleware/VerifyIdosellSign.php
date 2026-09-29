@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Weryfikuje podpis `sign` przychodzących webhooków IdoSell Apps.
  *
- * Przy niepowodzeniu zwracamy podpisaną odpowiedź `{status:"error", sign}` i NIE
- * przepuszczamy żądania dalej — payloadowi bez ważnego podpisu nie wolno ufać.
- * Status 200 z `status: "error"` to zachowanie oczekiwane przez platformę.
+ * Przy niepowodzeniu zwracamy HTTP 200 z `{status:"error"}` i nie przepuszczamy żądania dalej.
+ *
+ * Odpowiedź celowo NIE zawiera `sign`: podpis nie zależy od treści żądania, więc ważny `sign`
+ * odesłany nieuwierzytelnionemu nadawcy pozwoliłby mu podpisać dowolny webhook tego dnia.
  *
  * Alias: `idosell.verify-sign`.
  */
@@ -23,7 +24,8 @@ class VerifyIdosellSign
 
     public function handle(Request $request, Closure $next): Response
     {
-        $sign = (string) $request->input('sign', '');
+        $sign = $request->input('sign');
+        $sign = is_string($sign) ? $sign : '';
 
         if (!$this->signature->verify($sign)) {
             LogChannel::resolve()->warning('IdoSell webhook: nieprawidłowy podpis sign.', [
@@ -32,10 +34,7 @@ class VerifyIdosellSign
                 'sign_present' => $sign !== '',
             ]);
 
-            return response()->json([
-                'status' => 'error',
-                'sign' => $this->signature->make(),
-            ]);
+            return response()->json(['status' => 'error']);
         }
 
         return $next($request);

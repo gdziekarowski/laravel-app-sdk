@@ -28,16 +28,20 @@ $expected = hash('sha256', $login . '|' . date('Y-m-d') . '|' . $applicationKey)
 
 if (! hash_equals($expected, (string) $request->input('sign'))) {
     // odrzuć — nie ufaj payloadowi, nie loguj sekretów
-    return response()->json(['status' => 'error', 'sign' => $expected]);
+    return response()->json(['status' => 'error']);
 }
 ```
+
+> **Nie odsyłaj `sign` przy błędnym podpisie.** Podpis nie zależy od treści żądania, więc ważny
+> `sign` w odpowiedzi pozwoliłby nadawcy podpisać dowolny webhook tego dnia.
 
 > **Uwaga na datę**: podpis zależy od `date('Y-m-d')`. Wokół północy oraz przy różnicy stref
 > czasowych dopuść tolerancję (sprawdź też datę ±1 dzień), zanim uznasz podpis za niepoprawny.
 
 ### Podpisywanie odpowiedzi i żądań wychodzących
 
-Tym samym wzorem generuj `sign` w odpowiedziach (`{status, sign}`) oraz w żądaniach do Apps API
+Tym samym wzorem generuj `sign` w odpowiedziach na żądania z poprawnym podpisem (`{status, sign}`)
+oraz w żądaniach do Apps API
 (`application/license`, `setPrice`, `installation/done`).
 
 ## Deszyfracja `api_key` (aplikacja online, `authorization_type = "key"`)

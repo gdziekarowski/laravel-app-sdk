@@ -18,6 +18,25 @@ it('odrzuca webhook z nieprawidłowym podpisem i nie tworzy licencji', function 
     Log::shouldHaveReceived('warning');
 });
 
+it('nie ujawnia ważnego podpisu w odpowiedzi na błędny podpis', function () {
+    foreach (['new-license', 'remove-license', 'launch'] as $event) {
+        $response = $this->postJson(route('idosell.webhooks.'.$event), [
+            'client_id' => 1,
+            'application_id' => 4242,
+            'sign' => 'zly-podpis',
+        ]);
+
+        $response->assertOk()->assertExactJson(['status' => 'error']);
+        expect($response->getContent())->not->toContain($this->idosellSign());
+    }
+});
+
+it('odrzuca podpis przesłany jako tablica', function () {
+    $this->postJson(route('idosell.webhooks.new-license'), ['client_id' => 1, 'sign' => ['x']])
+        ->assertOk()
+        ->assertExactJson(['status' => 'error']);
+});
+
 it('odrzuca webhook bez podpisu', function () {
     $this->postJson(route('idosell.webhooks.new-license'), ['client_id' => 1])
         ->assertOk()

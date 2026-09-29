@@ -1,119 +1,98 @@
-# Testowanie integracji
+# Testowanie
+
+## Setup
+
+```php
+// tests/Pest.php
+use Idosell\LaravelAppSdk\Testing\InteractsWithIdosell;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+pest()->extend(Tests\TestCase::class)
+    ->use(RefreshDatabase::class, InteractsWithIdosell::class)
+    ->in('Feature');
+```
+
+PHPUnit: `use RefreshDatabase, InteractsWithIdosell;` w klasie testu. Tabela licencji powstaje z migracji
+pakietu.
 
 ## Trait `InteractsWithIdosell`
 
-```php
-use Idosell\LaravelAppSdk\Testing\InteractsWithIdosell;
+| Metoda | Działanie |
+|--------|-----------|
+| `withIdosellConfig(array $overrides = [])` | testowa konfiguracja: `application_id` 4242, `developer` `dev-login`, klucz 32 × `K`, typ `online` |
+| `fakeIdosellApps(array $extra = [])` | atrapa `keyset`, `installation/done`, `application/license` + `Http::preventStrayRequests()`; `$extra` to dodatkowe reguły `Http::fake()` |
+| `postIdosellNewLicense(array $payload = [])` | webhook aktywacji: `client_id` 555001, `api_url` `https://demo-shop.example.com/api`, sklep 1 |
+| `postIdosellRemoveLicense(array $payload = [])` | webhook deaktywacji |
+| `postIdosellLaunch(array $payload = [])` | webhook uruchomienia |
+| `idosellSign(?string $date = null)` | prawidłowy `sign` |
+| `idosellEncryptedApiKey(string $plain)` | `api_key` zaszyfrowany jak przez IdoSell |
+| `idosellIv()` | IV użyty przez atrapę `keyset` |
 
-uses(InteractsWithIdosell::class);   // Pest
-// albo: use InteractsWithIdosell;   — w klasie testu PHPUnit
-```
+`postIdosell*` wysyłają żądania na trasy `idosell.webhooks.*`. `$payload` nadpisuje pola domyślne.
 
-| Metoda | Do czego |
-|--------|----------|
-| `withIdosellConfig([...])` | Testowy zestaw danych aplikacji (klucz 32-bajtowy) |
-| `idosellSign(?$date)` | Prawidłowy podpis dla bieżącej konfiguracji |
-| `idosellEncryptedApiKey($plain)` | `api_key` zaszyfrowany tak, jak robi to platforma |
-| `fakeIdosellApps([...])` | Atrapa `keyset`, `installation/done`, `application/license` |
-| `postIdosellNewLicense([...])` | Webhook aktywacji |
-| `postIdosellRemoveLicense([...])` | Webhook deaktywacji |
-| `postIdosellLaunch([...])` | Webhook uruchomienia |
-
-Pomocniki `post*` idą **przez prawdziwą trasę HTTP**, razem z middleware. To celowe: większość
-błędów integracji siedzi w warstwie żądania (podpis, walidacja, kolejność middleware), a nie
-w samej akcji.
-
-## Instalacja u sprzedawcy
+## Fabryka
 
 ```php
-it('konfiguruje sklepy po instalacji aplikacji', function () {
-    $this->withIdosellConfig();
-    $this->fakeIdosellApps();
+use Idosell\LaravelAppSdk\Models\IdosellLicense;
 
-    $this->postIdosellNewLicense([
-        'client_id' => 555001,
-        'selected_shops' => [['id' => 1, 'name' => 'Sklep 1'], ['id' => 2, 'name' => 'Sklep 2']],
-    ])->assertOk()->assertJson(['status' => 'ok']);
-
-    expect(MojaKonfiguracja::count())->toBe(2);
-});
-```
-
-## Odrzucenie podrobionego webhooka
-
-```php
-it('nie ufa payloadowi bez ważnego podpisu', function () {
-    $this->withIdosellConfig();
-
-    $this->postIdosellNewLicense(['sign' => 'podrobiony'])
-        ->assertOk()
-        ->assertJson(['status' => 'error']);
-
-    expect(Idosell::license(555001))->toBeNull();
-});
-```
-
-## Sprzątanie przy odinstalowaniu
-
-```php
-it('usuwa snippet, póki klucz API jest jeszcze ważny', function () {
-    $this->withIdosellConfig();
-    $license = IdosellLicense::factory()->create(['client_id' => 555001]);
-
-    Http::fake(['*snippets*' => Http::response(['results' => [['id' => 9001]]], 200)]);
-
-    $this->postIdosellRemoveLicense(['client_id' => 555001])->assertJson(['status' => 'ok']);
-
-    Http::assertSent(fn ($request) => $request->method() === 'DELETE');
-    expect($license->fresh()->active)->toBeFalse();
-});
-```
-
-## Fabryka licencji
-
-```php
 IdosellLicense::factory()->create(['client_id' => 555001]);
 IdosellLicense::factory()->inactive()->create();
 IdosellLicense::factory()->oauth()->create();
 IdosellLicense::factory()->withShops([['id' => 3, 'name' => 'Sklep 3']])->create();
 ```
 
-## Atrapy Admin API
-
-Admin API nie ma atrapy w paczce — każda aplikacja woła inne endpointy. Używaj `Http::fake()`:
+## Przykłady
 
 ```php
-Http::fake(function ($request) {
-    return $request->method() === 'GET'
-        ? Http::response(['results' => []], 200)
-        : Http::response(['results' => [['id' => 4001]]], 200);
+use Idosell\LaravelAppSdk\Facades\Idosell;
+use Idosell\LaravelAppSdk\Models\IdosellLicense;
+use Illuminate\Support\Facades\Http;
+
+it('zapisuje licencję po instalacji', function () {
+    $this->withIdosellConfig();
+    $this->fakeIdosellApps();
+
+    $this->postIdosellNewLicense(['client_id' => 555001])
+        ->assertOk()
+        ->assertJson(['status' => 'ok']);
+
+    expect(Idosell::license(555001)?->active)->toBeTrue();
 });
-Http::preventStrayRequests();
+
+it('odrzuca webhook z błędnym podpisem', function () {
+    $this->withIdosellConfig();
+
+    $this->postIdosellNewLicense(['sign' => 'podrobiony'])->assertJson(['status' => 'error']);
+
+    expect(Idosell::license(555001))->toBeNull();
+});
+
+it('wpuszcza do panelu z podpisanym linkiem', function () {
+    $this->withIdosellConfig();
+    $license = IdosellLicense::factory()->create(['client_id' => 555001]);
+
+    $this->get(Idosell::panelUrl('app.panel', [], $license))->assertOk();
+    $this->get(route('app.panel', ['client' => 555001]))->assertForbidden();
+});
+
+it('usuwa kampanię przy odinstalowaniu', function () {
+    // wymaga listenera CleanUpForMerchant z docs/03-zdarzenia.md
+    $this->withIdosellConfig();
+    IdosellLicense::factory()->create(['client_id' => 555001]);
+
+    Http::fake([
+        '*snippets/campaign*' => function ($request) {
+            return $request->method() === 'GET'
+                ? Http::response(['results' => [['id' => 7, 'name' => 'Moja aplikacja', 'shop' => [1]]]])
+                : Http::response(['results' => [['id' => 7]]]);
+        },
+    ]);
+
+    $this->postIdosellRemoveLicense(['client_id' => 555001])->assertJson(['status' => 'ok']);
+
+    Http::assertSent(fn ($request): bool => $request->method() === 'DELETE');
+    expect(Idosell::license(555001)->active)->toBeFalse();
+});
 ```
 
-> Kolejne wywołania `Http::fake()` **dokładają** reguły, a pasuje pierwsza pasująca. Wspólna atrapa
-> `'*'` w `beforeEach` przesłoni wszystko, co zarejestrujesz później w teście — w tym przypadki
-> błędów. Rejestruj atrapy per test.
-
-`Http::preventStrayRequests()` warto dodawać zawsze — inaczej test, który trafi w nieobsłużony
-endpoint, po cichu wyjdzie do prawdziwego API.
-
-## Symulacja webhooków lokalnie
-
-```bash
-php artisan idosell:simulate new-license --client=990001
-php artisan idosell:simulate launch
-php artisan idosell:simulate remove-license
-```
-
-Komenda buduje payload o realnym kształcie, podpisuje go i — dla `new-license` — szyfruje `api_key`
-bieżącym IV z `keyset`, po czym wysyła żądanie HTTP pod własną aplikację. Przechodzi więc dokładnie
-tę samą ścieżkę co prawdziwy webhook. Na produkcji jest zablokowana.
-
-## Co warto pokryć testem
-
-- [ ] Odrzucenie webhooka bez ważnego podpisu (i brak skutków ubocznych).
-- [ ] Ponowne dostarczenie aktywacji nie duplikuje danych.
-- [ ] Sprzątanie przy deaktywacji wykonuje się, póki licencja jest aktywna.
-- [ ] Wejście do panelu aplikacji bez podpisanego URL kończy się 403.
-- [ ] Błąd Admin API nie zostawia niespójnego stanu u Ciebie w bazie.
+Trasa `app.panel` pochodzi z aplikacji ([02-panel.md](02-panel.md)).

@@ -1,37 +1,32 @@
 # Changelog
 
-Format wg [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/);
-wersjonowanie wg [SemVer](https://semver.org/lang/pl/).
+Format wg [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/); wersjonowanie wg [SemVer](https://semver.org/lang/pl/).
 
 ## [Unreleased]
 
-### Dodane
+### Bezpieczeństwo
 
-- Middleware `idosell.panel` (`EnsureIdosellLicense`): weryfikacja podpisanego URL panelu, wymóg aktywnej licencji, 403 (JSON dla `expectsJson()`).
-- `Idosell::currentLicense()` oraz binding `IdosellLicense` w kontenerze i atrybut żądania `idosell_license` na trasach panelu.
-- `Idosell::panelUrl()` i helper `idosell_route()` — podpisane linki z kontekstem instalacji do przenoszenia między stronami panelu w iframe.
-- `Support\LaunchParameters` — wspólne mapowanie `idosell.launch.parameters` dla launch, middleware i linków panelu.
-- Dokumentacja `docs/07-panel.md` (trasy, formularze, CSRF w iframe).
+- Odpowiedź na webhook z błędnym podpisem nie zawiera już `sign` (`{"status":"error"}`). Wcześniej zawierała podpis ważny dla wszystkich webhooków danego dnia. Zalecana aktualizacja.
+- `sign` przesłany jako tablica jest odrzucany (`status: error`) zamiast kończyć się błędem 500.
 
-### Zmienione
-
-- Usunięto `docs/06-pulapki.md`; `docs/07-migracja.md` → `docs/06-migracja.md`.
-- Wsparcie Laravel 13 (`illuminate/*` `^13.0`, `orchestra/testbench` `^11.0`); matryca CI rozszerzona o Laravel 13.
-
-## [0.1.0] — pierwsze wydanie
-
-Pierwsze wydanie pakietu.
+## [1.1.0] — 2026-09-29
 
 ### Dodane
 
-- Podpis `sign` z tolerancją daty (`SignatureService`).
-- Deszyfracja `api_key` z odświeżeniem IV po nieudanej próbie (`ApiKeyDecryptor`).
-- Klient Apps API: `installation/done`, `application/license`, `setPrice` (`AppsApiClient`).
-- Klient Admin API sprzedawcy z autoryzacją `X-API-KEY` i OAuth Bearer (`AdminApiClient`).
-- Webhooki cyklu życia: trasy, Form Requesty, kontroler, middleware weryfikacji i logowania.
+- Middleware `idosell.panel` (`EnsureIdosellLicense`): wpuszcza do panelu aplikacji z podpisanym linkiem i aktywną licencją, w przeciwnym razie 403.
+- `Idosell::currentLicense()` oraz wstrzykiwanie `IdosellLicense` w kontrolerach tras panelu.
+- `Idosell::panelUrl()` i helper `idosell_route()`: podpisane linki i akcje formularzy w panelu.
+
+## [1.0.0]
+
+### Dodane
+
+- Webhooki `new-license`, `remove-license`, `launch` z weryfikacją `sign` i logowaniem (`idosell.verify-sign`, `idosell.log-webhook`).
 - Model `IdosellLicense` z szyfrowanymi sekretami, fabryką i zakresami.
 - Zdarzenia `LicenseActivated`, `LicenseDeactivating`, `LicenseDeactivated`, `AppLaunched`.
-- Zasoby Admin API z idempotencją po tożsamości: `Snippets`, `OffersFeed`.
-- Komendy `idosell:install`, `idosell:doctor`, `idosell:licenses`, `idosell:simulate`.
+- Klient Admin API sprzedawcy (`X-API-KEY`, OAuth Bearer), zasoby `Snippets` i `OffersFeed`.
+- Klient Apps API: `licenses()`, `setPrice()`, `post()`; automatyczne `installation/done`.
+- Komendy `idosell:install`, `idosell:doctor`, `idosell:simulate`, `idosell:licenses`.
 - Trait testowy `InteractsWithIdosell`.
 - Baza wiedzy o IdoSell dla asystentów AI (`skills/`).
+- Wsparcie Laravel 11, 12 i 13.

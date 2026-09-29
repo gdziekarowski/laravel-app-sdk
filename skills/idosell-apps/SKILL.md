@@ -47,7 +47,7 @@ Szczegóły w `rules/sdk-integration.md`.
 - Aktywacja licencji → POST na `url_webhook_new_license`; deaktywacja → `url_webhook_remove_license`.
 - Uruchomienie w panelu sprzedawcy → POST na URL aplikacji; odpowiedz `{status, redirect, sign}`.
 - Finalizacja instalacji (online) → POST `apps.idosell.com/api/application/installation/done`.
-- Każdy webhook zawiera `sign`; odpowiadaj `{status:"ok"|"error", sign}`.
+- Każdy webhook zawiera `sign`; odpowiadaj `{status:"ok"|"error", sign}`, a na żądanie z błędnym podpisem `{status:"error"}` bez `sign`.
 
 ### 2. Podpis i kryptografia → `rules/signature-and-crypto.md`
 
