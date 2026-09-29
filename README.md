@@ -124,6 +124,5 @@ Ograniczenia `simulate`: [docs/06-komendy.md](docs/06-komendy.md).
 4. [API](docs/04-api.md): model licencji, Admin API, snippety, feed, Apps API, fasada
 5. [Testowanie](docs/05-testowanie.md): trait `InteractsWithIdosell`, fabryka
 6. [Komendy](docs/06-komendy.md): `install`, `doctor`, `simulate`, `licenses`
-7. [Migracja](docs/07-migracja.md): przejście z własnej implementacji
 
 Zmiany: [CHANGELOG.md](CHANGELOG.md). Licencja MIT.

@@ -2,7 +2,7 @@
 
 Format wg [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/); wersjonowanie wg [SemVer](https://semver.org/lang/pl/).
 
-## [Unreleased]
+## [1.1.1] — 2026-09-29
 
 ### Bezpieczeństwo
 
