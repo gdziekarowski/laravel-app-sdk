@@ -1,0 +1,71 @@
+{
+    "name": "idosell/laravel-app-sdk",
+    "description": "SDK dla Laravela do budowy aplikacji IdoSell Apps: webhooki cyklu życia licencji, podpis sign, deszyfracja api_key, klienci Apps API i Admin API sprzedawcy.",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "idosell",
+        "idosell-apps",
+        "iai",
+        "sdk",
+        "webhooks",
+        "ecommerce"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "IAI S.A.",
+            "homepage": "https://www.iai-sa.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "illuminate/console": "^11.0|^12.0|^13.0",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/http": "^11.0|^12.0|^13.0",
+        "illuminate/routing": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "pestphp/pest": "^3.5|^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Idosell\\LaravelAppSdk\\": "src/",
+            "Idosell\\LaravelAppSdk\\Database\\Factories\\": "database/factories/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Idosell\\LaravelAppSdk\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Idosell\\LaravelAppSdk\\IdosellServiceProvider"
+            ],
+            "aliases": {
+                "Idosell": "Idosell\\LaravelAppSdk\\Facades\\Idosell"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,104 @@
+/* Styl eksportu SVG/PNG (mermaid-cli -C). GitHub renderuje Mermaid własnym stylem — ten plik
+   dotyczy tylko plików w docs/img. */
+
+svg {
+  font-family: Inter, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Węzły flowchartu i aktorzy: zaokrąglenia + miękki cień */
+.node rect,
+.node polygon,
+.node path,
+.node circle,
+rect.actor,
+rect.note,
+rect.labelBox {
+  rx: 12px;
+  ry: 12px;
+  filter: drop-shadow(0 1px 1px rgba(15, 23, 42, 0.06)) drop-shadow(0 6px 14px rgba(15, 23, 42, 0.07));
+}
+
+.node .label,
+.nodeLabel {
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* Grupy (subgraph / box) */
+.cluster rect {
+  rx: 18px;
+  ry: 18px;
+  stroke-width: 1.5px;
+}
+
+.cluster-label .nodeLabel,
+.cluster-label span {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 12px;
+  fill: #475569;
+  color: #475569;
+}
+
+/* Krawędzie i etykiety krawędzi */
+.flowchart-link,
+.edgePath .path {
+  stroke-width: 1.6px;
+}
+
+.edgeLabel p,
+.edgeLabel span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+}
+
+/* Diagramy sekwencji */
+text.actor > tspan {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.actor-line {
+  stroke-dasharray: 3 4;
+  stroke-width: 1.2px;
+}
+
+.messageText {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.messageLine0,
+.messageLine1 {
+  stroke-width: 1.6px;
+}
+
+.sequenceNumber {
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.labelText,
+.labelText > tspan {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.loopText,
+.loopText > tspan {
+  font-style: italic;
+  fill: #475569;
+}
+
+.loopLine {
+  stroke-dasharray: 5 4;
+  stroke: #cbd5e1;
+}
+
+.noteText,
+.noteText > tspan {
+  font-size: 15px !important;
+  font-weight: 600;
+}
