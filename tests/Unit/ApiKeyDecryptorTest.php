@@ -29,7 +29,7 @@ it('rzuca wyjątek, gdy deszyfracja się nie powiedzie', function () {
  *
  * W trybie CBC nieprawidłowy IV nie wywraca deszyfracji — psuje wyłącznie pierwszy blok
  * (16 bajtów) tekstu jawnego. Nieaktualny IV z cache dałby więc „klucz API", który wygląda
- * poprawnie i bez szemrania trafiłby do bazy, a błąd wyszedłby dopiero przy pierwszym
+ * poprawnie i bez błędu trafiłby do bazy, a błąd wyszedłby dopiero przy pierwszym
  * wywołaniu Admin API. Dlatego IV pobieramy zawsze na świeżo.
  */
 it('przy nieprawidłowym IV zwraca uszkodzony klucz zamiast błędu — dlatego IV nie jest cache’owany', function () {

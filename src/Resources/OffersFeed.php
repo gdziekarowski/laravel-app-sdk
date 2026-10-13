@@ -14,7 +14,7 @@ use Idosell\LaravelAppSdk\Services\AdminApiClient;
  * XSLT przekazywany inline w polu `driver`. Nie buduj feedu samodzielnie — utrzymanie
  * własnego generatora i świeżości danych jest znacznie droższe.
  *
- * `POST`/`PUT` zwracają samo `id`, bez adresu pliku — URL dociąga się osobnym `GET`.
+ * `POST`/`PUT` zwracają samo `id`, bez adresu pliku — URL pobiera się osobnym `GET`.
  *
  * @see https://idosell.readme.io/reference
  */
@@ -38,7 +38,7 @@ class OffersFeed
      * Szuka feedu po tożsamości (sklep + nazwa) — nie po zapamiętanym id.
      *
      * Dzięki temu ręczne skasowanie feedu w panelu jest wykrywane i feed powstaje od nowa,
-     * zamiast wiecznie odbijać się o 404.
+     * zamiast kończyć się błędem 404.
      *
      * @return array<string, mixed>|null
      */

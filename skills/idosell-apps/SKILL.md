@@ -3,7 +3,7 @@ name: idosell-apps
 description: "Użyj przy budowie, integracji, testowaniu lub publikacji aplikacji dla platformy IdoSell Apps (apps.idosell.com) — szczególnie w Laravelu z paczką idosell/laravel-app-sdk. Obejmuje: webhooki cyklu życia licencji (new-license, launch, remove-license, modyfikacja licencji), podpis sign, deszyfrację api_key, panel aplikacji w iframe (middleware idosell.panel, idosell_route), zdarzenia SDK (LicenseActivated, LicenseDeactivating, AppLaunched), Apps API (application/license, installation/done, setPrice), webhooki zdarzeń sklepu (orderCreated, productStockUpdated…), modele płatności i weryfikację aplikacji. Triggery: 'IdoSell Apps', 'aplikacja IdoSell', 'webhook licencji', 'installation/done', 'setPrice', 'panel aplikacji IdoSell', 'idosell:simulate', 'laravel-app-sdk'. Do wywołań REST Admin API sklepu (produkty, snippety, feed) użyj skilla idosell-admin-api."
 license: MIT
 metadata:
-  author: iaisa
+  author: IdoSell (IAI S.A.)
   source: https://idosell.readme.io/docs/apps
 ---
 
@@ -38,8 +38,8 @@ Szczegóły i reguły „rób / nie rób”: `rules/sdk-integration.md`.
   w `.env` / menedżerze sekretów.
 - `contact_data` i dane z Admin API (zamówienia, klienci) to **dane osobowe** (RODO). Nie loguj
   payloadów webhooków ani zdarzeń. W przykładach wartości syntetyczne (`client_id` 555001,
-  `client1234.idosell.com`, `jan.kowalski@example.com`).
-- Wszystkie webhooki wysyła **serwer** IdoSell; IP nadawców nie są stałe — **nie filtruj po IP**.
+  `clientxxxx.idosell.com`, `jan.kowalski@example.com`).
+- Wszystkie webhooki wysyła **serwer** IdoSell; adresy serwerów IdoSell mogą się zmieniać — **nie filtruj po IP**.
 
 ## Quick Reference
 
@@ -54,8 +54,8 @@ Szczegóły i reguły „rób / nie rób”: `rules/sdk-integration.md`.
 
 ### 2. Podpis i kryptografia → `rules/signature-and-crypto.md`
 
-- `sign = sha256(developer|Y-m-d|application_key)` — bez treści i `client_id`, wspólny dla wszystkich
-  sprzedawców danego dnia. SDK: `Idosell::verify()` (±1 dzień), `Idosell::sign()`.
+- `sign = sha256(developer|Y-m-d|application_key)` — podpis dzienny aplikacji; instalację identyfikuje
+  `api_license`. SDK: `Idosell::verify()` (±1 dzień), `Idosell::sign()`.
 - `api_key` (online, `authorization_type=key`): AES-256-CBC kluczem aplikacji, IV z
   `https://apps.idosell.com/keyset`. SDK: `Idosell::decryptApiKey()`.
 

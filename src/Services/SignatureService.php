@@ -6,8 +6,7 @@ use Idosell\LaravelAppSdk\Exceptions\ConfigurationException;
 use Illuminate\Support\Facades\Date;
 
 /**
- * Generowanie i weryfikacja podpisu `sign` — jedynego uwierzytelnienia w komunikacji
- * z IdoSell Apps.
+ * Generowanie i weryfikacja podpisu `sign` używanego w komunikacji z IdoSell Apps.
  *
  * Wzór: sha256( login_dewelopera | Y-m-d | applicationKey ).
  *

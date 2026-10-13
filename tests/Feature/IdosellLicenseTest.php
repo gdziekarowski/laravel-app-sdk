@@ -24,15 +24,15 @@ it('nie ujawnia sekretów przy serializacji do tablicy/JSON', function () {
 });
 
 it('wyciąga domenę panelu z api_url', function () {
-    expect(license(['api_url' => 'https://example-shop.iai-shop.com/api'])->domain())
-        ->toBe('example-shop.iai-shop.com');
+    expect(license(['api_url' => 'https://xxxx.iai-shop.com/api'])->domain())
+        ->toBe('xxxx.iai-shop.com');
 });
 
 it('normalizuje listę sklepów wybranych przy instalacji', function () {
     $license = license(['meta' => ['selected_shops' => [
         ['id' => '3', 'name' => 'Sklep PL'],
         ['id' => 4, 'name' => 'Sklep EN'],
-        'śmieć',
+        'nieprawidłowy-wpis',
     ]]]);
 
     expect($license->shops())->toBe([

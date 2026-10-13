@@ -175,11 +175,11 @@ class AdminApiClient
      * nigdy z wartości na sztywno.
      *
      * Z `api_url` bierzemy wyłącznie host, bo ścieżki wywołań zawierają już `/admin/v{X}/...`
-     * lub `/partners/v{X}/...`. To odporne na niespójność wartości przekazywanych przez IdoSell
-     * (`.../api`, `.../api/admin`, sam host) i zapobiega sklejeniu `/api/admin/admin/...`.
+     * lub `/partners/v{X}/...`. Dzięki temu działają wszystkie dopuszczalne formy `api_url`
+     * (`.../api`, `.../api/admin`, sam host) i nie powstaje `/api/admin/admin/...`.
      *
      * Adres musi przejść `ApiUrlPolicy` (https + dozwolony host) także tutaj, nie tylko
-     * w webhooku — chroni licencje zapisane przed wprowadzeniem walidacji.
+     * w webhooku — chroni również licencje zapisane wcześniej lub zmienione poza SDK.
      *
      * @throws ConfigurationException gdy `api_url` nie zawiera hosta
      * @throws DisallowedApiUrlException gdy `api_url` nie przechodzi polityki adresów

@@ -74,7 +74,7 @@ it('licenses informuje, gdy nie ma żadnej instalacji', function () {
 
 it('simulate wysyła webhook z prawidłowym podpisem i szyfrowanym kluczem', function () {
     $this->fakeIdosellApps([
-        // Symulator strzela pod własną aplikację — w teście przechwytujemy to wywołanie.
+        // Symulator wysyła żądanie do własnej aplikacji — w teście przechwytujemy to wywołanie.
         'moja-aplikacja.example.com/*' => Http::response(['status' => 'ok', 'sign' => $this->idosellSign()], 200),
     ]);
 

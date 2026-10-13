@@ -13,8 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * Przy niepowodzeniu zwracamy HTTP 200 z `{status:"error"}` i nie przepuszczamy żądania dalej.
  *
- * Odpowiedź celowo NIE zawiera `sign`: podpis nie zależy od treści żądania, więc ważny `sign`
- * odesłany nieuwierzytelnionemu nadawcy pozwoliłby mu podpisać dowolny webhook tego dnia.
+ * Odpowiedź celowo NIE zawiera `sign` — podpis zwracamy wyłącznie nadawcy, którego żądanie
+ * przeszło weryfikację.
  *
  * Alias: `idosell.verify-sign`.
  */

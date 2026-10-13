@@ -66,6 +66,6 @@ konfigurowany po stronie sklepu.
   potwierdzenia w dokumentacji (patrz „Format danych" wyżej).
 - Ciężką obróbkę zdarzenia wynieś do kolejki (job) i odpowiadaj szybko. Zapewnij idempotencję
   (event może przyjść ponownie).
-- Nie filtruj po IP nadawcy — IP serwerów IdoSell nie są stałe.
+- Nie filtruj po IP nadawcy — adresy serwerów IdoSell mogą się zmieniać.
 - Nie loguj payloadów (dane klientów końcowych, RODO); do logów strukturę przepuść przez
   `Support\Redactor::redact()`.

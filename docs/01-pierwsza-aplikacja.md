@@ -57,7 +57,7 @@ Route::middleware('idosell.panel')->prefix('panel')->name('app.')->group(functio
 });
 ```
 
-Panel działa w iframe na innej domenie, więc cookies (a z nimi token CSRF) nie docierają. Wyłącz CSRF
+W iframe na innej domenie cookies (a z nimi token CSRF) zwykle nie docierają. Wyłącz CSRF
 dla panelu — chroni go podpisany link. Jeśli aplikacja stoi za proxy lub load balancerem z TLS, dodaj też
 `trustProxies`, inaczej podpis linku się nie zgodzi:
 
@@ -193,6 +193,8 @@ W tym samym miejscu zadeklaruj uprawnienia klucza Admin API — każda bramka AP
 zaznacz te, z których korzysta aplikacja.
 
 ## 9. Zainstaluj aplikację w sklepie testowym
+
+Zgodnie z [instrukcją IdoSell](https://idosell.readme.io/docs/how-can-i-test-an-unpublished-application):
 
 1. W panelu dewelopera: **Your data → Test panel ID or domain** — wpisz domenę swojego panelu demo.
 2. W panelu demo: **Apps → Catalog of applications and services**, otwórz dowolną aplikację i w adresie

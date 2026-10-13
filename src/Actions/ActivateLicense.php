@@ -13,22 +13,16 @@ use Illuminate\Database\UniqueConstraintViolationException;
 /**
  * Aktywacja licencji po webhooku `url_webhook_new_license`.
  *
- * Podpis `sign` nie obejmuje treści webhooka, więc aktywację traktujemy jako
- * niezaufaną, dopóki nie potwierdzi jej Apps API:
+ * Aktywacja jest potwierdzana w Apps API, zanim licencja zacznie działać:
  *
  * - aplikacja online: licencja staje się aktywna DOPIERO po udanym `installation/done`.
  *   Nowa instalacja jest zapisywana wcześniej jako nieaktywna (żeby nie stracić danych
  *   sprzedawcy, gdy padnie finalizacja), a zmiany istniejącej zapisujemy dopiero po
  *   finalizacji — nieudana próba nie nadpisuje danych ani nie przywraca licencji,
- * - zmiana panelu (`api_url`) przy zapisanym kluczu wymaga przysłania nowego, INNEGO `api_key` —
- *   inaczej stary klucz poszedłby pod nowy adres (także przy odtworzeniu przechwyconego
- *   webhooka z podmienionym `api_url`).
- *
- * - `api_license` należący do innej instalacji jest odrzucany — inaczej przechwycony
- *   webhook sprzedawcy odtworzony z innym `client_id` i własnym `api_url` dałby aktywną
- *   licencję z prawdziwym kluczem sprzedawcy wskazującą na serwer atakującego. Sprawdzamy
- *   lokalnie (hash licencji) i w Apps API (`client.id` licencji) — to drugie działa też
- *   dla aplikacji downloadable i dla licencji usuniętych z bazy.
+ * - zmiana panelu (`api_url`) przy zapisanym kluczu wymaga przysłania nowego, innego `api_key`,
+ *   żeby zapisany klucz nie trafił pod inny adres,
+ * - `api_license` przypisany do innej instalacji jest odrzucany — sprawdzamy lokalnie
+ *   (hash licencji) i w Apps API (`client.id` licencji), także dla aplikacji downloadable.
  *
  * Idempotentne: rekord po (client_id, application_id) obsługuje ponowne dostarczenie
  * webhooka i ponowną instalację aplikacji.
@@ -128,9 +122,8 @@ class ActivateLicense
     /**
      * Nie pozwala skierować zapisanego klucza Admin API pod inny panel.
      *
-     * Ten sam klucz pod nowym adresem odrzucamy tak samo jak brak klucza: przechwycony
-     * webhook sprzedawcy (z jego zaszyfrowanym `api_key`) odtworzony z podmienionym
-     * `api_url` wysłałby inaczej prawdziwy klucz na serwer atakującego.
+     * Ten sam klucz pod nowym adresem odrzucamy tak samo jak brak klucza — zmiana panelu
+     * musi przyjść z nowym `api_key`.
      *
      * @throws IdosellException
      */

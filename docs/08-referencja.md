@@ -16,8 +16,8 @@
 | Zmienna | Domyślnie | Znaczenie |
 |---------|-----------|-----------|
 | `IDOSELL_APP_TYPE` | `online` | `online` (aplikacja w iframe, potwierdzana w IdoSell) albo `downloadable` |
-| `IDOSELL_ADMIN_API_ALLOWED_HOSTS` | `*.idosell.com,*.iai-shop.com` | domeny paneli, do których SDK wyśle klucz sprzedawcy (wzorce po przecinku). Pusta wartość wyłącza sprawdzanie listy. |
-| `IDOSELL_VERIFY_LICENSE_OWNER` | `true` | sprawdzanie w IdoSell, czy licencja należy do sprzedawcy. `false` tylko lokalnie albo awaryjnie. |
+| `IDOSELL_ADMIN_API_ALLOWED_HOSTS` | `*.idosell.com,*.iai-shop.com` | domeny paneli, do których SDK wyśle klucz sprzedawcy (wzorce po przecinku). Pusta wartość wyłącza sprawdzanie listy (niezalecane). |
+| `IDOSELL_VERIFY_LICENSE_OWNER` | `true` | sprawdzanie w IdoSell, czy licencja należy do sprzedawcy. `false` tylko do testów lokalnych z symulatorem — nigdy na produkcji. |
 | `IDOSELL_LAUNCH_TTL` | `30` | ważność linków panelu (minuty) |
 | `IDOSELL_ON_DEACTIVATION` | `mark_inactive` | po odinstalowaniu: `mark_inactive` (licencja zostaje) albo `delete` |
 | `IDOSELL_LOG_CHANNEL` | domyślny kanał | kanał logów SDK |
@@ -34,7 +34,7 @@
 | `IDOSELL_APPS_KEYSET_URL` | `https://apps.idosell.com/keyset` | adres wektora do odszyfrowania kluczy |
 | `IDOSELL_APPS_TIMEOUT` / `_CONNECT_TIMEOUT` | `10` / `5` | timeouty Apps API (s) |
 | `IDOSELL_APPS_RETRIES` / `_RETRY_DELAY` | `3` / `200` | ponowienia i odstęp (ms) |
-| `IDOSELL_SIGN_DATE_TOLERANCE` | `1` | tolerancja daty podpisu w dniach — nie zmieniaj |
+| `IDOSELL_SIGN_DATE_TOLERANCE` | `1` | tolerancja czasu podpisu webhooków — nie zmieniaj |
 | `IDOSELL_DB_CONNECTION` | domyślne | połączenie bazy dla licencji |
 | `IDOSELL_LICENSES_TABLE` | `idosell_licenses` | nazwa tabeli licencji |
 | `IDOSELL_RUN_MIGRATIONS` | `true` | `false`, gdy opublikowałeś migracje do aplikacji |
@@ -59,7 +59,7 @@
 |-------|-----------|
 | `--client` | `990001` |
 | `--application` | `IDOSELL_APPLICATION_ID` |
-| `--api-url` | `https://demo-shop.idosell.com/api/admin/` |
+| `--api-url` | `https://clientxxxx.idosell.com/api/admin/` |
 | `--api-key` | `admin-api-key-0000000000000000` |
 | `--api-license` | `LIC-SIMULATED-0000000000` |
 | `--url` | `{APP_URL}/{IDOSELL_ROUTES_PREFIX}/{webhook}` |

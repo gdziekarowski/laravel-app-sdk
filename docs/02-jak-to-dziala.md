@@ -7,7 +7,7 @@
 | **Licencja** | Jedna instalacja Twojej aplikacji u jednego sprzedawcy. SDK zapisuje ją w tabeli `idosell_licenses`. |
 | `client_id` | Numer konta sprzedawcy w IdoSell. |
 | `application_id` | Numer Twojej aplikacji z panelu dewelopera. |
-| `api_url` | Adres Admin API sklepu sprzedawcy, np. `https://client1234.idosell.com/api/admin/`. |
+| `api_url` | Adres Admin API sklepu sprzedawcy, np. `https://clientxxxx.idosell.com/api/admin/`. |
 | `api_key` | Klucz sprzedawcy do Admin API. Przychodzi zaszyfrowany, SDK go odszyfrowuje i zapisuje zaszyfrowany w bazie. |
 | `api_license` | Numer licencji — identyfikuje instalację w IdoSell (np. przy opłatach). |
 | `sign` | Podpis każdego webhooka, liczony z Twojego klucza aplikacji. SDK go sprawdza. |

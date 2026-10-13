@@ -70,7 +70,7 @@ $snippetId = $snippets->upsert($campaignId, 'Mój skrypt', '<script src="https:/
 - Zasoby są wyszukiwane **po nazwie** (+ sklep / kampania), nie po zapamiętanym id — ponowna
   instalacja nie tworzy duplikatów, ręcznie skasowany zasób wraca. **Nie zmieniaj nazw** między
   wersjami (zmiana = nowy zasób) i nie zapisuj id jako źródła prawdy.
-- `upsert()` zawsze ustawia `display` (bez niego API ustawia `n` i snippet się nie ładuje).
+- `upsert()` zawsze ustawia `display` jawnie (domyślna wartość to `n` — snippet niewidoczny).
 - `setEndDate()` to karencja niezależna od ważności klucza — np. w `LicenseDeactivating`.
 - Dane wstawiane do kodu snippetu escapuj (`e()`, `json_encode()`).
 
@@ -103,7 +103,7 @@ $params = [
 | Wyjątek | Znaczenie |
 |---------|-----------|
 | `ApiException` (`$e->status`, `$e->errors`) | HTTP ≠ 2xx, 3xx, albo błąd w treści przy 200 (`results[].errors` w snippetach, `errors.faultString` w `partners/v2`). 401/403 → brak bramki w panelu dewelopera. |
-| `DisallowedApiUrlException` | `api_url` poza polityką; prawdziwy panel z inną domeną → dopisz ją do `IDOSELL_ADMIN_API_ALLOWED_HOSTS`. |
+| `DisallowedApiUrlException` | `api_url` poza polityką. Domenę dopisz do `IDOSELL_ADMIN_API_ALLOWED_HOSTS` tylko po potwierdzeniu we wsparciu IdoSell, że to domena panelu IdoSell. |
 | `IdosellException` | licencja online bez `installation/done` — sprzedawca instaluje ponownie. |
 | `ConfigurationException` | błąd w kodzie (np. pełny URL zamiast ścieżki) albo brak konfiguracji. |
 
@@ -117,4 +117,4 @@ Zasoby SDK (`Snippets`, `OffersFeed`) sprawdzają błędy w treści same. Przy w
 
 - Deklaruj minimum bramek w panelu dewelopera.
 - Pobieraj tylko potrzebne pola; nie loguj odpowiedzi Admin API ani danych osobowych.
-- Nie filtruj webhooków IdoSell po IP — IP nadawców nie są stałe.
+- Nie filtruj webhooków IdoSell po IP — adresy serwerów IdoSell mogą się zmieniać.

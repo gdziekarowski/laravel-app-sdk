@@ -10,8 +10,8 @@ https://{domena-panelu}/api/admin/v8        Admin API
 https://{domena-panelu}/api/partners/v2     API partnerskie (feed) — ten sam host i klucz
 ```
 
-- **`{domena-panelu}` jest różna dla każdego sklepu**, np. `client1234.idosell.com` albo
-  `example-shop.iai-shop.com`.
+- **`{domena-panelu}` jest różna dla każdego sklepu**, np. `clientxxxx.idosell.com` albo
+  `xxxx.iai-shop.com`.
 - W aplikacji IdoSell Apps domena wynika z `api_url` licencji (`https://clientNNNN.idosell.com/api/admin/`)
   — bierz z niego **tylko host**, ścieżkę buduj sam. Nigdy nie hardkoduj domeny (SDK: `$license->adminApi()`).
 - Klucz wysyłaj wyłącznie po **https** na domeny paneli IdoSell (`*.idosell.com`, `*.iai-shop.com`),
@@ -58,6 +58,6 @@ Schematy w OpenAPI v8: `ApiKeyAuth` (nagłówek `X-API-KEY`), `bearerAuth` (HTTP
 
 ## Zasady
 - Ustal wersję API i trzymaj się jej.
-- Nie wszystkie operacje panelu mają odpowiednik w API — wykonaj akcję ręcznie, znajdź endpoint,
-  przetestuj na panelu demo; braki zgłoś do wsparcia (https://idosell.readme.io/docs/support).
+- Jeśli potrzebnej operacji nie znajdziesz w spec, skontaktuj się ze wsparciem
+  (https://idosell.readme.io/docs/support).
 - Sekrety (klucz/token) tylko w bazie zaszyfrowane albo w `.env` / menedżerze sekretów.

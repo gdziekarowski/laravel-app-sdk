@@ -118,13 +118,49 @@ $feeds = Idosell::offersFeed($license);
 ```php
 $apps = Idosell::apps();
 
-$apps->setPrice($license->api_license, 250);   // opłata w modelu usage/limit
-$apps->findLicense($license->api_license);     // dane licencji z IdoSell
+$apps->findLicense($license->api_license);     // dane licencji z IdoSell (aktywność, cennik, sklep)
 $apps->licenses(active: true);                 // wszystkie aktywne licencje aplikacji
+$apps->setPrice($license->api_license, 250);   // opłata za bieżący okres (opis niżej)
 ```
 
-`setPrice()` **ustawia** kwotę bieżącego okresu, nie dodaje: 100, a potem 250 daje 250. Wysyłaj
-narastającą sumę i nie przekraczaj limitu wydatków sprzedawcy.
+### Opłaty: `setPrice()`
+
+Tylko dla aplikacji z modelem płatności **usage/limit** (cena zależna od użycia), ustawionym w panelu
+dewelopera. Przy cenie stałej i subskrypcji IdoSell nalicza opłaty sam — `setPrice()` nie jest potrzebne.
+
+Jak działa:
+
+- **Ustawia** kwotę za bieżący okres rozliczeniowy sprzedawcy, **nie dodaje** jej: 100, a potem 250
+  daje opłatę 250, nie 350. Wysyłaj zawsze **narastającą sumę** za cały okres.
+- IdoSell dolicza kwotę do faktury sprzedawcy na koniec okresu.
+- Sprzedawca przy instalacji ustala **limit wydatków** — kwoty powyżej limitu IdoSell odrzuci
+  (`ApiException`).
+- To prawdziwa opłata — testuj tylko na licencji w sklepie demo.
+
+Przykład: 0,10 zł za każde zamówienie obsłużone przez aplikację w bieżącym okresie.
+
+```php
+use Idosell\LaravelAppSdk\Exceptions\ApiException;
+use Idosell\LaravelAppSdk\Facades\Idosell;
+
+// Np. w zadaniu uruchamianym raz dziennie, dla każdej aktywnej licencji.
+$license = Idosell::license($clientId);
+
+// Twoja logika: liczba zamówień od początku bieżącego okresu rozliczeniowego sprzedawcy.
+$orders = $this->countHandledOrders($license, since: $periodStart);
+$amount = round($orders * 0.10, 2);   // suma za CAŁY okres, nie przyrost od ostatniego wywołania
+
+try {
+    $result = Idosell::apps()->setPrice($license->api_license, $amount);
+    // $result['license']: price, price_limit, currency, next_invoice_day
+} catch (ApiException $e) {
+    report($e);   // np. kwota powyżej limitu sprzedawcy
+}
+```
+
+Odpowiedź zawiera `license.price` (ustawiona kwota), `license.price_limit` (limit sprzedawcy),
+`license.currency` i `license.next_invoice_day` (dzień wystawienia faktury). Dane cennika licencji
+(m.in. limit) zwraca też `findLicense()` w polu `pricing`.
 
 ## Model licencji i fasada — ściąga
 

@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Http;
 /**
  * Klient deweloperskiego Apps API (https://apps.idosell.com/api).
  *
- * Każde żądanie jest podpisywane polem `sign`. API potrafi zwrócić błąd biznesowy
- * przy statusie HTTP 200 (`status: "error"`), więc sprawdzamy jedno i drugie.
+ * Każde żądanie jest podpisywane polem `sign`. API zgłasza błędy biznesowe w treści odpowiedzi
+ * (`status: "error"`), także przy HTTP 200 — sprawdzamy oba.
  *
  * @see https://idosell.readme.io/docs/access-to-the-api
  */

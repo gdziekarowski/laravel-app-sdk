@@ -64,7 +64,7 @@ Każdy link i formularz w panelu musi nieść podpis — buduj adresy przez `ido
 
 ## CSRF
 
-W iframe cookies zwykle nie docierają, więc formularze POST dostałyby 419. Wyłącz CSRF dla panelu —
+W iframe na innej domenie cookies zwykle nie docierają, więc formularze POST dostałyby 419. Wyłącz CSRF dla panelu —
 chroni go podpisany link:
 
 ```php

@@ -67,7 +67,7 @@ przy błędnym `sign` — `{"status":"error"}` **bez** `sign`.
 {
   "client_id": 555001,                    // int — konto sprzedawcy
   "application_id": 1234,                 // int
-  "api_url": "https://client1234.idosell.com/api/admin/",
+  "api_url": "https://clientxxxx.idosell.com/api/admin/",
   "api_license": "…",                     // numer licencji (sekret)
   "api_key": "…",                         // tylko online: ZASZYFROWANY AES-256-CBC
   "authorization_type": "key",            // tylko online: "key" | "OAuth"
@@ -105,8 +105,7 @@ Odpowiedź (panel otwiera `redirect`):
 
 ## Zasady
 
-- **`sign` nie obejmuje treści ani `client_id`** — sam podpis nie dowodzi, którego sprzedawcy
-  dotyczy webhook. Dlatego:
+- **`sign` uwierzytelnia aplikację, a instalację identyfikuje `api_license`.** Dlatego:
   - `launch` i `remove-license`: wymagaj `api_license` zgodnego z zapisaną licencją (porównanie
     w stałym czasie); `launch` tylko dla aktywnej licencji. `remove-license` bez zgodnej licencji →
     `ok` bez zmian.
@@ -117,4 +116,4 @@ Odpowiedź (panel otwiera `redirect`):
 - **Odpowiadaj szybko**; ciężką pracę do kolejki (poza sprzątaniem przy odinstalowaniu).
 - Przechowuj licencję per (`client_id`, `application_id`), sekrety zaszyfrowane — w SDK model
   `IdosellLicense` robi wszystko powyższe. Nie pisz tego od nowa (`rules/sdk-integration.md`).
-- Nie filtruj webhooków po IP — IP nadawców nie są stałe i nie są publikowane.
+- Nie filtruj webhooków po IP — adresy serwerów IdoSell mogą się zmieniać.

@@ -34,8 +34,7 @@ class IdosellLicense extends Model
 
     /**
      * Jawna lista zamiast `$guarded`: przy `$guarded` innym niż `['*']` Eloquent odpytuje
-     * `information_schema` o kolumny, czego nie przechodzą starsze wersje MySQL spotykane
-     * na produkcji.
+     * `information_schema` o kolumny, co bywa problemem na starszych wersjach MySQL.
      *
      * @var array<int, string>
      */
@@ -138,8 +137,8 @@ class IdosellLicense extends Model
     /**
      * Czy `$apiLicense` z webhooka to klucz tej licencji (porównanie odporne na timing).
      *
-     * `sign` nie obejmuje `client_id`, więc to `api_license` — znane tylko platformie
-     * i tej instalacji — potwierdza, że webhook dotyczy właśnie tego sprzedawcy.
+     * `api_license` — znany tylko platformie i tej instalacji — potwierdza, że webhook
+     * dotyczy właśnie tego sprzedawcy.
      */
     public function matchesApiLicense(?string $apiLicense): bool
     {
@@ -148,7 +147,7 @@ class IdosellLicense extends Model
     }
 
     /**
-     * Domena panelu sprzedawcy wyciągnięta z `api_url` (np. `example-shop.iai-shop.com`).
+     * Domena panelu sprzedawcy wyciągnięta z `api_url` (np. `xxxx.iai-shop.com`).
      */
     public function domain(): ?string
     {

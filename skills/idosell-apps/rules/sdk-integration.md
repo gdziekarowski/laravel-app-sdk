@@ -40,10 +40,9 @@ IDOSELL_LAUNCH_ROUTE=app.panel   # nazwa trasy panelu
 ```
 
 - `IDOSELL_APP_TYPE=online` (domyślnie) dla aplikacji w iframe.
-- `IDOSELL_VERIFY_LICENSE_OWNER=true` (domyślnie) — nie wyłączaj na produkcji (tylko lokalnie albo
-  awaryjnie przy awarii/zmianie formatu Apps API).
+- `IDOSELL_VERIFY_LICENSE_OWNER=true` (domyślnie) — nie wyłączaj poza lokalnym testem `idosell:simulate`.
 - `IDOSELL_ADMIN_API_ALLOWED_HOSTS=*.idosell.com,*.iai-shop.com` (domyślnie) — dopisuj tylko
-  konkretne domeny paneli IdoSell, nigdy obcych domen; nie ustawiaj pustej wartości bez potrzeby.
+  konkretne domeny paneli IdoSell, nigdy obcych domen; nie ustawiaj pustej wartości (wyłącza sprawdzanie listy).
 - Nie zmieniaj `APP_KEY` po starcie produkcji — zapisane klucze przestaną się odszyfrowywać,
   a adresy feedów (`OffersFeed::nameKey()`) się zmienią.
 - Opublikowany `config/idosell.php` ze starszej wersji porównaj z nową (`idosell:install --force`).
@@ -180,7 +179,7 @@ Idosell::apps()->setPrice($license->api_license, 250);        // NADPISUJE kwot�
    'idosell.verify-sign']`, kontrolerem SDK i nazwami `idosell.webhooks.*`.
 2. **Nie loguj payloadów, `sign`, podpisanych linków ani `getMessage()` wyjątków bazodanowych**
    (SQL z wartościami = sekrety). Strukturę loguj przez `Redactor::redact()`; wyjątki — klasą i kodem.
-3. **Nie filtruj webhooków po IP** — IP serwerów IdoSell nie są stałe.
+3. **Nie filtruj webhooków po IP** — adresy serwerów IdoSell mogą się zmieniać.
 4. **Nie hardkoduj domen sprzedawców** — host Admin API wynika z `api_url` licencji.
 5. **Do wyszukiwania instalacji** używaj `Idosell::license($clientId)` /
    `IdosellLicense::query()->active()`; nie szukaj po `api_license` (kolumna szyfrowana).
@@ -212,7 +211,7 @@ it('instaluje aplikację u sprzedawcy', function () {
 
 Lokalnie bez panelu IdoSell: `php artisan idosell:simulate new-license|launch|remove-license`
 (prawdziwy podpis i zaszyfrowany klucz; domyślnie `--client=990001`,
-`--api-url=https://demo-shop.idosell.com/api/admin/`).
+`--api-url=https://clientxxxx.idosell.com/api/admin/`).
 
 - Wysyła tylko pod host z `APP_URL` albo adres lokalny, bez przekierowań; nie działa na produkcji.
 - Na czas testu: `IDOSELL_APP_TYPE=downloadable` i `IDOSELL_VERIFY_LICENSE_OWNER=false` (testowa

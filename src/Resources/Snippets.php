@@ -142,8 +142,7 @@ class Snippets
             'zone' => $options['zone'] ?? 'head',
             'pages' => $options['pages'] ?? ['all' => 'y'],
 
-            // Bez jawnego `display` API domyślnie ustawia 'n' i snippet po prostu się nie ładuje.
-            // (`screen/tablet/phone` nie ma w schemacie OpenAPI, ale API je przyjmuje i zwraca.)
+            // Jawne `display` zapewnia widoczność snippetu na wszystkich typach urządzeń.
             'display' => $options['display'] ?? [
                 'clientType' => 'all',
                 'screen' => 'y',
@@ -168,10 +167,9 @@ class Snippets
     /**
      * Ustawia (lub czyści) natywną datę wyłączenia snippetu.
      *
-     * Nieoczywista, ale bardzo użyteczna własność: IdoSell wyłączy snippet w tym dniu
-     * SAM. Datę wystarczy ustawić raz, póki klucz Admin API jest ważny — np. w webhooku
-     * deaktywacji, żeby dać sprzedawcy karencję. Dalej nie zależy to już ani od ważności
-     * klucza, ani od naszego schedulera.
+     * IdoSell wyłączy snippet w tym dniu automatycznie. Datę wystarczy ustawić raz, póki klucz
+     * Admin API jest ważny (np. w webhooku deaktywacji), żeby dać sprzedawcy karencję — dalej
+     * nie zależy to od ważności klucza ani od harmonogramu zadań aplikacji.
      *
      * @param  string|null  $date  data 'Y-m-d' albo null (czyści datę — snippet zostaje)
      */
@@ -199,8 +197,8 @@ class Snippets
     /**
      * Wyciąga id z odpowiedzi (`results[0].id`) albo rzuca, gdy API zgłosiło błąd walidacji.
      *
-     * Endpointy snippetów potrafią zwrócić HTTP 200/207 z błędem w `results[].errors` —
-     * bez tej kontroli zapisalibyśmy „sukces" bez utworzonego zasobu.
+     * Endpointy snippetów raportują błędy per element w `results[].errors` (także przy
+     * HTTP 200/207) — bez tej kontroli zapisalibyśmy „sukces" bez utworzonego zasobu.
      *
      * @param  array<string, mixed>  $response
      */

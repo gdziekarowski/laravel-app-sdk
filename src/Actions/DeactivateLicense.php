@@ -19,8 +19,8 @@ use Illuminate\Support\Collection;
 class DeactivateLicense
 {
     /**
-     * `$apiLicense` (z webhooka) zawęża deaktywację do licencji z tym kluczem — `sign` nie
-     * obejmuje `client_id`, więc bez tego podpis wystarczyłby do wyłączenia dowolnej instalacji.
+     * `$apiLicense` (z webhooka) zawęża deaktywację do licencji z tym kluczem — potwierdza,
+     * że webhook dotyczy tej instalacji.
      * `null` pomija sprawdzenie (wywołania z własnego kodu aplikacji).
      *
      * @return Collection<int, IdosellLicense> deaktywowane licencje (pusta, gdy nic nie znaleziono)

@@ -32,17 +32,14 @@ return [
         // Endpoint zwracający wektor inicjujący (IV) do deszyfracji `api_key`.
         'keyset_url' => env('IDOSELL_APPS_KEYSET_URL', 'https://apps.idosell.com/keyset'),
 
-        // Przy aktywacji pytamy Apps API (`application/license`), czy `api_license` z webhooka
-        // należy do tego `client_id`. `sign` nie obejmuje treści webhooka, więc bez tego
-        // przechwycony webhook dałoby się przypisać innej instalacji. Wyłączaj tylko awaryjnie.
+        // Przy aktywacji SDK potwierdza w Apps API (`application/license`), że `api_license`
+        // z webhooka należy do tego `client_id`. Pozostaw włączone; `false` tylko do testów
+        // lokalnych z `idosell:simulate`.
         'verify_license_owner' => (bool) env('IDOSELL_VERIFY_LICENSE_OWNER', true),
 
-        // Tolerancja daty (w dniach) przy weryfikacji przychodzącego `sign`.
-        // Datę w podpisie liczymy w strefie aplikacji (`app.timezone`, domyślnie UTC), IdoSell —
-        // we własnej (nieudokumentowanej). 1 = akceptujemy wczoraj/dziś/jutro: bezpieczne przy
-        // różnicy stref i webhookach dostarczonych tuż po północy, ale przechwycony podpis działa
-        // do ~72 h. 0 skraca to do jednego dnia kalendarzowego, lecz wymaga tej samej strefy co
-        // IdoSell i odrzuci webhook podpisany przed północą, a dostarczony po niej.
+        // Tolerancja daty (w dniach) przy weryfikacji przychodzącego `sign`. Datę w podpisie
+        // liczymy w strefie aplikacji (`app.timezone`). 1 = akceptujemy wczoraj/dziś/jutro —
+        // bezpieczne przy różnicy stref i webhookach dostarczonych tuż po północy. Nie zmieniaj.
         'sign_date_tolerance_days' => (int) env('IDOSELL_SIGN_DATE_TOLERANCE', 1),
 
         'timeout' => (int) env('IDOSELL_APPS_TIMEOUT', 10),

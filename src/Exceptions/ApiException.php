@@ -48,8 +48,8 @@ class ApiException extends IdosellException
     }
 
     /**
-     * Błąd zgłoszony w treści odpowiedzi mimo statusu 200 (Apps API i `partners/v2`
-     * potrafią zwrócić `status: "error"` / `errors.faultString` z kodem 200).
+     * Błąd zgłoszony w treści odpowiedzi (Apps API i `partners/v2` zgłaszają błędy biznesowe
+     * w treści: `status: "error"` / `errors.faultString`).
      *
      * @param  array<int|string, mixed>  $errors
      */

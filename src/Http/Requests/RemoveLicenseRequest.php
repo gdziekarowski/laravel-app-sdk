@@ -5,8 +5,8 @@ namespace Idosell\LaravelAppSdk\Http\Requests;
 /**
  * Payload webhooka deaktywacji licencji (`url_webhook_remove_license`).
  *
- * Do odnalezienia instalacji wystarczą `client_id` i `application_id`; pozostałe pola
- * bywają pomijane i nie mogą decydować o powodzeniu webhooka.
+ * Instalację identyfikują `client_id` i `application_id`; `api_license` jest wymagany i musi
+ * zgadzać się z zapisaną licencją.
  */
 class RemoveLicenseRequest extends WebhookRequest
 {

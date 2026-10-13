@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\URL;
  *
  * Domyślnie budujemy PODPISANY URL czasowy do trasy z configu. Podpis jest jedyną
  * identyfikacją sprzedawcy przy wejściu z panelu, więc trasa docelowa musi mieć
- * middleware `signed` — inaczej każdy mógłby wejść z dowolnym `client_id`.
+ * middleware `idosell.panel` (sprawdza podpis i licencję).
  */
 class LaunchUrlResolver
 {

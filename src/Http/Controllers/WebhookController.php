@@ -71,8 +71,7 @@ class WebhookController extends Controller
      * Uruchomienie aplikacji w panelu sprzedawcy — zwraca URL przekierowania.
      *
      * Link do panelu wydajemy wyłącznie dla istniejącej, AKTYWNEJ licencji tej instalacji
-     * i tylko przy zgodnym `api_license`. `sign` nie obejmuje `client_id`, więc bez tego
-     * ważny podpis wystarczyłby do wejścia w panel dowolnego sprzedawcy.
+     * i tylko przy zgodnym `api_license`, który potwierdza tożsamość instalacji.
      */
     public function launch(LaunchRequest $request): JsonResponse
     {

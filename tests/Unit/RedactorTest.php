@@ -55,7 +55,7 @@ it('nie maskuje pól technicznych potrzebnych do diagnozy', function () {
     $data = [
         'client_id' => 555001,
         'application_id' => 4242,
-        'api_url' => 'https://client1.idosell.com/api/admin/',
+        'api_url' => 'https://clientxxxx.idosell.com/api/admin/',
         'authorization_type' => 'key',
         'selected_shops' => [['id' => 1, 'name' => 'Sklep 1']],
     ];

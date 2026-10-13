@@ -16,17 +16,15 @@ $sign = hash('sha256', $developer . '|' . date('Y-m-d') . '|' . $applicationKey)
 | Składnik | Znaczenie |
 |----------|-----------|
 | `$developer` | login dewelopera w IdoSell Apps (`IDOSELL_DEVELOPER`) |
-| `date('Y-m-d')` | bieżąca data; strefa czasowa IdoSell nie jest udokumentowana |
+| `date('Y-m-d')` | bieżąca data (`Y-m-d`); przy weryfikacji uwzględnij tolerancję ±1 dzień |
 | `$applicationKey` | klucz aplikacji z panelu dewelopera (`IDOSELL_APPLICATION_KEY`, sekret) |
 
 Własności, o których trzeba pamiętać:
 
-- Podpis **nie obejmuje treści żądania ani `client_id`** i jest **taki sam dla wszystkich
-  sprzedawców danego dnia**. Nie ma innego podpisu treści (HMAC). Ważny `sign` potwierdza tylko, że
-  nadawca zna klucz aplikacji — tożsamość instalacji potwierdza `api_license`
-  (`rules/app-lifecycle.md` → Zasady).
+- `sign` uwierzytelnia nadawcę jako znającego klucz aplikacji. Konkretną instalację identyfikuje
+  `api_license` — SDK sprawdza go automatycznie (`rules/app-lifecycle.md` → Zasady).
 - Przy weryfikacji dopuść datę ±1 dzień (przełom doby, różne strefy). SDK:
-  `IDOSELL_SIGN_DATE_TOLERANCE=1` — przechwycony podpis działa więc do ~72 h; nie zmieniaj bez powodu.
+  `IDOSELL_SIGN_DATE_TOLERANCE=1` (domyślnie) — nie zwiększaj.
 - Porównuj w stałym czasie (`hash_equals`).
 
 Weryfikacja (poza SDK):
@@ -43,8 +41,7 @@ if (! $valid) {
 }
 ```
 
-- **Nie odsyłaj `sign` przy błędnym podpisie** — ważny podpis w odpowiedzi pozwoliłby nadawcy
-  podpisać dowolny webhook tego dnia.
+- **Nie odsyłaj `sign` przy błędnym podpisie** — odpowiedź błędu to samo `{"status":"error"}`.
 - **Nie loguj `sign`** (ani przy sukcesie, ani przy błędzie) — loguj najwyżej fakt obecności pola.
 - Tym samym wzorem podpisujesz odpowiedzi na poprawne webhooki (`{status, sign}`) oraz żądania do
   Apps API (`application/license`, `setPrice`, `installation/done`).

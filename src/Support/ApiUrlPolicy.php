@@ -9,9 +9,8 @@ use Illuminate\Support\Str;
 /**
  * Reguły adresów, pod które SDK wysyła sekrety (klucz Admin API sprzedawcy, `sign`).
  *
- * `api_url` przychodzi w webhooku, a podpis `sign` nie obejmuje treści żądania —
- * bez tych reguł spreparowany webhook mógłby skierować wywołania Admin API (razem
- * z `X-API-KEY` sprzedawcy) na dowolny serwer albo do sieci wewnętrznej (SSRF).
+ * `api_url` przychodzi w webhooku, więc zanim SDK wyśle pod niego klucz Admin API, sprawdza go
+ * (https, publiczna domena, lista dozwolonych hostów) — ochrona przed wyciekiem klucza i SSRF.
  */
 class ApiUrlPolicy
 {
@@ -31,9 +30,8 @@ class ApiUrlPolicy
      * `idosell.admin_api.allowed_hosts` (wzorce `Str::is`, domyślnie `*.idosell.com,*.iai-shop.com`);
      * pusta lista wyłącza to sprawdzenie.
      *
-     * Nie rozwiązujemy DNS: domena atakującego wskazująca adres prywatny przejdzie tę regułę.
-     * Przed tym chroni aktywacja dopiero po potwierdzeniu instalacji przez Apps API
-     * (zob. Actions\ActivateLicense) i odmowa klienta Admin API dla niepotwierdzonych licencji.
+     * Reguła nie rozwiązuje DNS — dodatkową ochronę zapewnia aktywacja dopiero po potwierdzeniu
+     * instalacji przez Apps API (zob. Actions\ActivateLicense).
      */
     public static function allowsAdminApi(string $url): bool
     {

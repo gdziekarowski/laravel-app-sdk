@@ -8,20 +8,20 @@ it('bez listy hostów przepuszcza https do dowolnej publicznej domeny', function
 
     expect(ApiUrlPolicy::allowsAdminApi($url))->toBeTrue();
 })->with([
-    'https://client1.idosell.com/api',
-    'https://example-shop.iai-shop.com',
+    'https://clientxxxx.idosell.com/api',
+    'https://xxxx.iai-shop.com',
     'https://panel.sklep-przyklad.example.net:8443/api',
-    'https://CLIENT1.IDOSELL.COM/api',
-    'https://client1.idosell.com./api',
+    'https://CLIENTXXXX.IDOSELL.COM/api',
+    'https://clientxxxx.idosell.com./api',
     'https://xn--sklep-przykad-0ob.example.pl/api',
 ]);
 
 it('zawsze odrzuca adresy bez https, IP i sieć wewnętrzną', function (string $url) {
     expect(ApiUrlPolicy::allowsAdminApi($url))->toBeFalse();
 })->with([
-    'http://client1.idosell.com/api',
-    'ftp://client1.idosell.com',
-    'client1.idosell.com/api',
+    'http://clientxxxx.idosell.com/api',
+    'ftp://clientxxxx.idosell.com',
+    'clientxxxx.idosell.com/api',
     '',
     'https://127.0.0.1/api',
     'https://169.254.169.254/latest',
@@ -49,8 +49,8 @@ it('zamienia domenę IDN na punycode przed sprawdzeniem i połączeniem', functi
 it('zwraca origin ze znormalizowanym hostem i portem', function () {
     config(['idosell.admin_api.allowed_hosts' => '*.idosell.com']);
 
-    expect(ApiUrlPolicy::adminApiOrigin('https://Client1.IdoSell.com.:8443/api/admin'))
-        ->toBe('https://client1.idosell.com:8443');
+    expect(ApiUrlPolicy::adminApiOrigin('https://Clientxxxx.IdoSell.com.:8443/api/admin'))
+        ->toBe('https://clientxxxx.idosell.com:8443');
 });
 
 it('z listą hostów przepuszcza tylko pasujące domeny', function (string $url, bool $allowed) {
@@ -58,11 +58,11 @@ it('z listą hostów przepuszcza tylko pasujące domeny', function (string $url,
 
     expect(ApiUrlPolicy::allowsAdminApi($url))->toBe($allowed);
 })->with([
-    ['https://client1.idosell.com/api', true],
-    ['https://example-shop.iai-shop.com', true],
+    ['https://clientxxxx.idosell.com/api', true],
+    ['https://xxxx.iai-shop.com', true],
     ['https://idosell.com.attacker.example.org/api', false],
-    ['https://evilidosell.com/api', false],
-    ['https://client1.idosell.com@attacker.example.org/api', false],
+    ['https://example-idosell.com/api', false],
+    ['https://clientxxxx.idosell.com@attacker.example.org/api', false],
 ]);
 
 it('przyjmuje listę hostów jako tablicę', function () {
@@ -77,8 +77,8 @@ it('domyślnie przepuszcza tylko domeny paneli IdoSell', function () {
     $default = require __DIR__.'/../../config/idosell.php';
     config(['idosell.admin_api.allowed_hosts' => $default['admin_api']['allowed_hosts']]);
 
-    expect(ApiUrlPolicy::allowsAdminApi('https://client2397.idosell.com/api/admin/'))->toBeTrue()
-        ->and(ApiUrlPolicy::allowsAdminApi('https://demo-shop.iai-shop.com/api'))->toBeTrue()
+    expect(ApiUrlPolicy::allowsAdminApi('https://clientxxxx.idosell.com/api/admin/'))->toBeTrue()
+        ->and(ApiUrlPolicy::allowsAdminApi('https://xxxx.iai-shop.com/api'))->toBeTrue()
         ->and(ApiUrlPolicy::allowsAdminApi('https://panel.sklep-przyklad.example.net/api'))->toBeFalse();
 });
 
@@ -94,7 +94,7 @@ it('podaje przyczynę i host odrzucenia', function (string $url, string $reason,
     }
 })->with([
     'brak hosta' => ['nie-adres', DisallowedApiUrlException::INVALID, null],
-    'http' => ['http://client1.idosell.com/api', DisallowedApiUrlException::SCHEME, 'client1.idosell.com'],
+    'http' => ['http://clientxxxx.idosell.com/api', DisallowedApiUrlException::SCHEME, 'clientxxxx.idosell.com'],
     'IP' => ['https://10.0.0.1/api', DisallowedApiUrlException::NOT_PUBLIC, '10.0.0.1'],
     'spoza listy' => ['https://panel.sklep-przyklad.example.net/api', DisallowedApiUrlException::NOT_ALLOWED, 'panel.sklep-przyklad.example.net'],
 ]);

@@ -34,4 +34,4 @@ php artisan migrate
 7. [Produkcja i typowe błędy](docs/07-produkcja-i-bledy.md) — checklista i rozwiązywanie problemów
 8. [Referencja](docs/08-referencja.md) — wszystkie zmienne `.env`, komendy, opcje zaawansowane
 
-Zmiany: [CHANGELOG.md](CHANGELOG.md). Licencja MIT.
+Zmiany: [CHANGELOG.md](CHANGELOG.md). Licencja MIT — [LICENSE.md](LICENSE.md).

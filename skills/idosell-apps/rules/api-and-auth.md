@@ -24,7 +24,7 @@ Aplikacja korzysta z dwóch API:
 | `/application/license/setPrice` | opłata w modelu usage/limit | `application_id`, `developer`, `api_license`, `price` |
 | `/application/installation/done` | potwierdzenie instalacji (online) | `application_id`, `developer`, `api_license` |
 
-### Odpowiedź `application/license` (potwierdzona na panelu demo)
+### Odpowiedź `application/license`
 
 ```jsonc
 {
@@ -38,7 +38,7 @@ Aplikacja korzysta z dwóch API:
     "technical": {
       "installation_completed": false, // false do czasu installation/done
       "installation_completed_date": null,
-      "orderd_date": "…",              // literówka jest w API
+      "orderd_date": "…",              // dokładnie ta nazwa pola
       "termination_date": null,
       "api_permissions": [ … ]
     },
@@ -78,11 +78,11 @@ $apps->setPrice($license->api_license, 250);     // NADPISUJE kwotę okresu (usa
 - `authorization_type: "OAuth"`: SDK nie zapisuje tokenu — pobierz go sam (`POST /authorize/accessToken`
   Admin API sklepu) i zapisz w licencji (`$license->update(['api_key' => $token])`); `adminApi()`
   wyśle wtedy `Authorization: Bearer`. Odświeżanie tokenu jest po stronie aplikacji.
-- Model SaaS: wszyscy sprzedawcy na tej samej wersji systemu; poprawki niemal codziennie, z naciskiem
-  na wsteczną kompatybilność w ramach wersji API. Testuj na panelu **demo**
+- Model SaaS: wszyscy sprzedawcy na tej samej wersji systemu, aktualizacje z zachowaniem wstecznej
+  kompatybilności w ramach wersji API. Testuj na panelu **demo**
   (https://www.idosell.com/pl/demo/zamowienie-dostepu-do-demo/).
-- Nie każda operacja panelu ma odpowiednik w API: wykonaj akcję ręcznie, znajdź endpoint w spec,
-  przetestuj na demo; braki zgłoś do wsparcia (https://idosell.readme.io/docs/support).
+- Jeśli potrzebnej operacji nie znajdziesz w spec, skontaktuj się ze wsparciem
+  (https://idosell.readme.io/docs/support).
 
 Endpointy, pola, snippety, feed i klient SDK → skill **`idosell-admin-api`**.
 

@@ -3,7 +3,7 @@ name: idosell-admin-api
 description: "Użyj przy wywołaniach IdoSell Admin API sklepu (REST /api/admin/v8) i API partnerskiego (/api/partners/v2) — API konkretnego panelu sprzedawcy — także przez $license->adminApi() z paczki idosell/laravel-app-sdk. Obejmuje: adres bazowy z api_url licencji, autoryzację (X-API-KEY, OAuth Bearer), uprawnienia bramek, wstrzykiwanie kodu/pixeli przez snippety (snippets/campaign, snippets/snippets, Idosell::snippets), feed produktowy (partners/v2 offers/feed, IOF30, XSLT, Idosell::offersFeed), odczyt produktów (products/products/search), obsługę błędów (ApiException, 207, faultString). Triggery: 'Admin API', 'api/admin/v8', 'X-API-KEY', 'snippet', 'pixel w sklepie', 'feed produktowy', 'offers/feed', 'products/search', 'adminApi()'. Webhooki licencji, sign, panel aplikacji i Apps API → skill idosell-apps."
 license: MIT
 metadata:
-  author: iaisa
+  author: IdoSell (IAI S.A.)
   source: https://idosell.readme.io/docs/access-to-the-api
 ---
 

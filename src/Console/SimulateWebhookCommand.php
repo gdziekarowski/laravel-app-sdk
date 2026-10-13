@@ -18,8 +18,8 @@ use function Laravel\Prompts\select;
  * dewelopera. Świadomie NIE omijamy warstwy HTTP — chodzi o sprawdzenie realnej ścieżki
  * żądania razem z middleware.
  *
- * Wyłącznie dla środowisk nieprodukcyjnych. Payload zawiera WAŻNY dzienny `sign` (ten sam dla
- * wszystkich sprzedawców), więc wysyłamy go tylko pod adres własnej aplikacji (host z `APP_URL`)
+ * Wyłącznie dla środowisk nieprodukcyjnych. Payload zawiera prawdziwy podpis `sign` aplikacji,
+ * więc wysyłamy go tylko pod adres własnej aplikacji (host z `APP_URL`)
  * albo lokalny (`localhost`, `127.0.0.1`, `*.localhost`, `*.test`) i bez podążania za przekierowaniem.
  */
 class SimulateWebhookCommand extends Command
@@ -28,7 +28,7 @@ class SimulateWebhookCommand extends Command
                             {event? : new-license|remove-license|launch}
                             {--client=990001 : client_id sprzedawcy}
                             {--application= : application_id (domyślnie z configu)}
-                            {--api-url=https://demo-shop.idosell.com/api/admin/ : adres Admin API sprzedawcy (domena z listy paneli)}
+                            {--api-url=https://clientxxxx.idosell.com/api/admin/ : adres Admin API sprzedawcy (domena z listy paneli)}
                             {--api-key=admin-api-key-0000000000000000 : klucz Admin API do zaszyfrowania}
                             {--api-license=LIC-SIMULATED-0000000000 : klucz licencji}
                             {--url= : Pełny adres webhooka (domyślnie z APP_URL i configu tras)}';
@@ -66,7 +66,7 @@ class SimulateWebhookCommand extends Command
 
         if (!$this->isOwnApplication($url)) {
             $this->components->error(sprintf(
-                'Odrzucono adres %s: symulator wysyła ważny dzienny `sign`, więc dozwolony jest tylko '
+                'Odrzucono adres %s: symulator wysyła prawdziwy podpis aplikacji, więc dozwolony jest tylko '
                 .'adres własnej aplikacji (host z APP_URL) albo lokalny (localhost, 127.0.0.1, *.localhost, *.test).',
                 (string) (parse_url($url, PHP_URL_HOST) ?: $url),
             ));
